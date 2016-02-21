@@ -54,27 +54,35 @@ public class Main {
 			} catch (ImageProcessingException | IOException e) {
 				e.printStackTrace();
 			}
-			for (String s : imgtags.keySet()){
-				String html = div;
-				String[] sss = imgtags.get(s);
-				StringBuilder sb = new StringBuilder();
+			
+		}
+		System.out.println(names.size());
+		for (String s : names){
+			if (s.endsWith("txt") || s.endsWith("html") || s.endsWith("bat") || s.endsWith("png") || s.endsWith("jar")){
+				continue;
+			}
+			String html = div  +"";
+			String[] sss = imgtags.get(s);
+			StringBuilder sb = new StringBuilder();
+			if (sss != null){
 				for (String s2 : sss){
 					sb.append(s2 + " ");
 				}
-				//System.out.println(sb.toString());
-				html = html.replace("$TAG$", sb.toString());
-				html = html.replace("$IMAGE$", "images/" +s);
-				//System.out.println(html);
-				FINAL_HTML_INSERT = FINAL_HTML_INSERT + html;
 			}
-//			System.out.println(FINAL_HTML_INSERT);
-			//createFile("test.txt", FINAL_HTML_INSERT);
-			
+			//System.out.println(sb.toString());
+			html = html.replace("$TAG$", "All " + sb.toString());
+			html = html.replace("$IMAGE$", "images/" +s).replace("$IMAGE$", "images/" +s);
+			//System.out.println(html);
+			FINAL_HTML_INSERT += html;
 		}
+//		System.out.println(FINAL_HTML_INSERT);
+		//createFile("test.txt", FINAL_HTML_INSERT);
+		
 		@SuppressWarnings("resource")
 		String content = new Scanner(Main.class.getResourceAsStream("portfolio.html")).useDelimiter("\\Z").next();
 		content = content.replace("$DIV_FINAL_INSERT$", FINAL_HTML_INSERT);
 		String html = "";
+		html+="<li><a href=\"#\" data-filter=\".All\">All</a></li> ";
 		for (String s : tags){
 			html += htmlTag.replace("$NAME$",s).replace("$NAME$", s);
 		}
@@ -109,12 +117,12 @@ public class Main {
 	//$TAG$
 private static String div = "<div class=\"isotope-item $TAG$\" itemscope itemtype=\"http://schema.org/CreativeWork\">\n" +
 
-						"<a href=\"project.html\" title=\"Project\" rel=\"bookmark\" itemprop=\"url\">\n" +
+						"<div class=\"thumb_img\">\n<a href=\"project.html?image=$IMAGE$\" title=\"Project\" rel=\"bookmark\" itemprop=\"url\">\n" +
 							"<img src=\"$IMAGE$\" alt=\"View Project\" itemprop=\"image\">\n" +
 							"<div class=\"overlay\">\n" +
 								"<span class=\"title\" itemprop=\"name\">Project Name</span>\n" +
 							"</div> <!-- .overlay -->\n" +
-						"</a>\n" +
+						"</a>\n</div>\n" +
 
 					"</div> <!-- .isotope-item -->\n\n\n";
 private static String htmlTag = "<li><a href=\"#\" data-filter=\".$NAME$\">$NAME$</a></li> ";
